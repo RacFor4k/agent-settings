@@ -1,0 +1,23 @@
+{
+  "skill_name": "disk-space-audit",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Диск C почти полон, я не понимаю почему. Найди что занимает место, ничего не удаляй, и положи отчёт в Документы.",
+      "expected_output": "Markdown report in Documents with top-level breakdown, AppData deep-dive, grouped delete/uncertain/move sections. No files deleted.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Почисти мусор от удалённых программ на C:, но сначала просто покажи что нашёл, ничего не трогай.",
+      "expected_output": "Read-only listing of leftover/empty folders and caches (DEL/ASK), with cleanup commands shown as recommendations only.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Хочу перенести тяжёлое с C: на D:. Скажи что можно перенести и как (симлинки), не делай сам.",
+      "expected_output": "Grouped 'movable' section: games/mods, Docker data, large Downloads files, profile folders, with mklink/Docker-config instructions.",
+      "files": []
+    }
+  ]
+}
