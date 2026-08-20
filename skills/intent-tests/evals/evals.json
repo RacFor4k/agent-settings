@@ -1,0 +1,45 @@
+{
+  "skill_name": "intent-tests",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Напиши тесты для функции parse_int_list в файле utils.py. Она должна превращать строку вида '1,2,3' в список int. Покрой нормальные случаи и крайние.\n\n```python\n# utils.py\ndef parse_int_list(s: str):\n    parts = s.split(',')\n    result = []\n    for p in parts:\n        result.append(int(p.strip()))\n    return result\n```",
+      "expected_output": "Агент обнаруживает стек (Python/pytest), выводит намерение (строка -> список int через запятую), ревьюит через субагента, находит что пустая строка '' падает с ValueError вместо [] (баг/подозрение), сообщает пользователю и даёт выбор skip/accept/fix, затем пишет тесты под ЗАДУМАННОЕ поведение (включая крайние случаи), а не под текущий баг.",
+      "files": [],
+      "expectations": [
+        "Agent detected the Python language and selected a Python test framework (pytest or unittest).",
+        "Agent stated an inferred intent/spec for parse_int_list (comma-separated string -> list of ints).",
+        "Agent spawned a read-only reviewer subagent and recorded its findings.",
+        "Reviewer findings flag the empty-string/whitespace edge case as a definite error or suspicious spot.",
+        "Agent offered the user skip / accept-as-correct / fix choices for the flagged issue.",
+        "Written tests assert the intended behavior including at least one edge case (empty string, whitespace, or single value), not merely mirroring the buggy code."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Добавь юнит-тесты для функции withdraw в банковском модуле. Хочу быть уверен что логика правильная.\n\n```python\n# bank.py\ndef withdraw(balance: float, amount: float) -> float:\n    if amount > balance:\n        return balance\n    return balance - amount\n```",
+      "expected_output": "Агент выводит намерение (снятие суммы со счёта). Замечает что при недостатке средств функция молча возвращает баланс без изменений — подозревает баг/неясный функционал. ЗАДАЁТ пользователю уточняющий вопрос (бросать исключение / возвращать ошибку / текущее поведение) через ask_user_question, не угадывая. После ответа пишет тесты под подтверждённое намерение.",
+      "files": [],
+      "expectations": [
+        "Agent stated an inferred intent for withdraw.",
+        "Agent identified the insufficient-funds behavior (returns balance unchanged) as ambiguous / likely-not-as-planned.",
+        "Agent raised a clarification (a 'CLARIFICATION NEEDED' section with concrete options, or an actual ask) instead of silently assuming.",
+        "Agent did not write tests that only mirror the current no-op behavior without noting the ambiguity.",
+        "Tests reflect the resolved/assumed intended behavior and the assumption is documented."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Покрой тестами весь файл validation.js (несколько функций проверки форм). Используй тот же фреймворк что в проекте.\n\n```javascript\n// validation.js\nexport function isStrongPassword(pw) {\n  if (pw.length < 8) return false;\n  return true; // задумывалось: минимум 8 символов И хотя бы одна цифра\n}\n\nexport function isEmail(s) {\n  return s.includes('@');\n}\n```",
+      "expected_output": "Агент определяет стек (JS, напр. jest/vitest по package.json), проходит по обеим функциям. Для isStrongPassword ревьюер находит баг (не проверяет цифру). Агент сообщает и предлагает варианты исправления: т.к. верных путей несколько (regex / посимвольная проверка / includes digit), предлагает несколько субагентов-исправителей, пользователь выбирает. Тесты пишутся под задуманное поведение (длина+цифра).",
+      "files": [],
+      "expectations": [
+        "Agent detected the JavaScript language and selected a JS test framework (jest/vitest) convention.",
+        "Agent produced tests/coverage for BOTH functions (isStrongPassword and isEmail).",
+        "Reviewer flagged the isStrongPassword bug (missing digit/character-class check) as a definite error or suspicious spot.",
+        "Agent enumerated MULTIPLE valid fix approaches for isStrongPassword (e.g., regex vs per-character digit scan) and either spawned multiple fixer subagents or documented them as options.",
+        "Written tests assert the intended strong-password behavior (length >= 8 AND contains a digit), not just the current length-only check."
+      ]
+    }
+  ]
+}

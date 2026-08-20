@@ -5,7 +5,7 @@ Operating rules and domain-specific tool guidance for autonomous agents.
 ## 1. Core Operating Constraints
 - **Verify primary sources:** Never trust comments or memory. Inspect live code, run tests, or check tool output before claiming success.
 - **Precision edits:** Prefer `edit` over `write` for existing files. Read the target section before editing.
-- **Code style & formatting:** Match the existing formatting and code style of the file/repo. Run project linters/formatters (e.g. `prettier`, `eslint`, `black`, `cargo fmt`, `gofmt`) if available before finishing.
+- **Code style & formatting:** Match the existing formatting and code style of the file/repo.
 - **Process discipline:** State assumptions explicitly when input is ambiguous. Never stop at a partial fix or end tasks with conversational fluff.
 
 ---
@@ -69,5 +69,5 @@ Activate via `skill({name: "..."})` before planning/executing matching workflows
 
 ## 5. Self-Review Loop (run before declaring done)
 1. **Verified:** Did I run tests/checks and inspect output, rather than assuming it works?
-2. **Formatted:** Does the code match project conventions and pass linters/formatters?
+2. **Formatted:** Does the code match project conventions?
 3. **Clean & Complete:** No orphan debug logs, no broken edge cases, no trailing fluff questions.
